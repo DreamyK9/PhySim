@@ -10,5 +10,11 @@
         "moduleResolution": "node",
         "strict": true,
         "strictNullChecks": true,
-    }
+    },
+
+    "exclude": [
+        "node_modules",
+        "dist",
+        "unused_code",
+    ],
 }

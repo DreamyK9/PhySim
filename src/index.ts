@@ -1,17 +1,15 @@
-import * as p5 from "p5";
+import Interface from "./lib/core";
+import { Vec, GameObject } from "./lib/core";
 
-const Objects = [];
-const Container = document.getElementById("container");
 
-export const sketch = (p: p5) => {
-  p.setup = () => {
-    p.createCanvas(400, 400);
-  };
+for (let i = 1; i < 10; i++) {
+  let myObject = new GameObject(new Vec(80*i, 100));
+  myObject.addComponent(Interface.components.RigidBody, false, 100*i);
+  myObject.addComponent(Interface.components.CircleRender, false, 50);
+  myObject.components.physicsBody?.addForce(new Vec((-1)**i, 1));
 
-  p.draw = () => {
-    p.background(220);
-    p.ellipse(p.mouseX, p.mouseY, 20, 20);
-  };
-};
+  Interface.Objects.push(myObject);
+}
 
-export const myp5 = new p5(sketch);
+
+console.log(Interface.Objects);

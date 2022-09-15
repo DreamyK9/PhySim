@@ -1,60 +1,27 @@
-/*/ String Representations... /*/
-
-// of components
-
-// TODO: add more component types
-type ComponentString =
-  | PhysicsBodyString
-  | ColliderString
-  | RenderString
-  | "CustomComponent";
-  type PhysicsBodyString =
-    | "RigidBody"
-    | "SoftBody";
-  type ColliderString =
-    | "CircleCollider"
-    | "RectangleCollider"
-    | "PolygonCollider"
-    | "EllipseCollider";
-  type RenderString = 
-    | "SpriteRender"
-    | "TextRender"
-    | ShapeRenderString;
-    type ShapeRenderString =
-      | "RectRender"
-      | "CircleRender"
-      | "EllipseRender"
-      | "PolygonRender";
+import Settings from "./settings";
 
 /*/ Utility Functions /*/
 
-function classOf(o: Object) {
+export function classOf(o: Object) {
   return o.constructor;
 }
 
-function classOfStr(o: Object) {
+export function classOfStr(o: Object) {
   return o.constructor.name;
 }
 
-// TODO: finish time class
-class Time {
-  static time: number = 0;
+export class Time {
+  static time: number = Date.now();
   static deltaTime: number = 0;
   static frame: number = 0;
 
-  start() {
-    Time.time = Date.now();
-  }
-  increment() {
-    if (Time.frame === FPS) {
-      // TODO: implement
+  static increment() {
+    if (Time.frame === Settings.FPS) {
+      Time.frame = 0;
     }
+
     Time.deltaTime = Date.now() - Time.time;
-    Time.time += Time.deltaTime;
+    Time.time = Date.now();
     Time.frame++;
   }
-}
-
-function isComponentString(s: string) {
-  return (s as ComponentString) !== undefined;
 }
