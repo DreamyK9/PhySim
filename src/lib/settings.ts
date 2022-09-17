@@ -1,11 +1,11 @@
 
 const Settings = {
- WIDTH: 800,
- HEIGHT: 800,
+ WIDTH: 900,
+ HEIGHT: 900,
  FPS: 60,
  BACKGROUND: [20, 71, 126],
  Physics: {
-    GRAVITY: .01,
+    GRAVITY: .001,
  }
 }
 

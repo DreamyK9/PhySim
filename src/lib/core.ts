@@ -70,6 +70,10 @@ export class Vec extends Base {
     this.y += vec.y;
   }
 
+  subtract(origin: Vec): Vec {
+    let target = this;
+    return new Vec(target.x - origin.x, target.y - origin.y);
+  }
 }
 
 // TODO: abstract getting a component from a ComponentList to its own function
@@ -107,6 +111,7 @@ export class ComponentList extends Base {
       this.collider = c;
     } else if (c instanceof RenderComponent) {
       this.renderComponent = c;
+    // TODO: implement on custom component system rework
     } /* else if (c instanceof CustomComponent) {
       // ! WIP
       this.custom.push(c);
@@ -322,7 +327,7 @@ export type ShapeRenderClass = typeof CircleRender | typeof RectRender | typeof 
       this.F.y += Settings.Physics.GRAVITY * this.m;
     }
 
-    addForce(force: Vec) {
+    addForce (force: Vec) {
       this.F.add(force);
     }
   }
@@ -412,11 +417,22 @@ export type ShapeRenderClass = typeof CircleRender | typeof RectRender | typeof 
   }
 
   export class SpriteRender extends RenderComponent {
-    sprite?: undefined = undefined;
+    sprite: p5.Image;
 
-    constructor(sprite?: undefined) {
+    constructor(sprite?: string | p5.Image) {
       super();
-      this.sprite = sprite;
+
+      // create the sprite structure
+      if (typeof sprite === "string") {
+        this.sprite = p5Instance.loadImage(sprite);
+      } else if (sprite instanceof p5.Image) {
+        this.sprite = sprite;
+      } else {
+        // TODO: find better solution for this
+        throw new Error("SpriteRender: sprite must be passed as string or p5.Image");
+      }
+      // load the sprite's pixels into the pixels[] array
+      this.sprite.loadPixels();
     }
 
     update(user: GameObject) {
@@ -424,10 +440,19 @@ export type ShapeRenderClass = typeof CircleRender | typeof RectRender | typeof 
     }
   }
   export class TextRender extends RenderComponent {
-    text?: string = undefined;
+    text: string;
 
     constructor(text?: string) {
       super();
+      if (text) {
+        this.text = text;
+      } else {
+        console.warn("TextRender: text not passed, defaulting to empty string");
+        this.text = "";
+      }
+    }
+
+    set(text: string) {
       this.text = text;
     }
 
@@ -438,68 +463,121 @@ export type ShapeRenderClass = typeof CircleRender | typeof RectRender | typeof 
 
 
   export abstract class ShapeRender extends RenderComponent {
+    abstract color: p5.Color;
+
     constructor() {
       super();
     }
   }
 
   export class RectRender extends ShapeRender {
-    width?: number = undefined;
-    height?: number = undefined;
+    width: number;
+    height: number;
+    color: p5.Color;
 
-    constructor(width?: number, height?: number) {
+    constructor(width?: number, height?: number, color?: p5.Color) {
       super();
-      this.width = width;
-      this.height = height;
-    }
+      if (width && height) {
+        this.width = width;
+        this.height = height;
+      } else {
+        console.warn("RectRender: width or height not passed, defaulting to 0");
+        this.width = 0;
+        this.height = 0;
+      }
 
-    init(width: number, height: number) {
-      this.width = width;
-      this.height = height;
+      if (color) {
+        this.color = color;
+      } else {
+        console.warn("RectRender: color not passed, defaulting to white");
+        this.color = p5Instance.color(255);
+      }
     }
 
     update(user: GameObject) {
-      p5Instance.rect(user.pos.x, user.pos.y, this.width? this.width : 0, this.height? this.height : 0);
+      p5Instance.fill(this.color);
+      p5Instance.rect(
+        user.pos.x - this.width / 2, // left
+        user.pos.y - this.height / 2, // top
+        this.width / 2, // right
+        this.height / 2 // bottom
+      );
     }
   }
   export class CircleRender extends ShapeRender {
-    radius: number = 0;
+    radius: number;
+    color: p5.Color;
 
-    constructor(radius?: number) {
+    constructor(radius?: number, color?: p5.Color) {
       super();
-      if (!radius)
-        console.warn("CircleRender: radius not defined");
-      else
+      if (!radius) {
+        console.error("CircleRender: radius not passed, defaulting to 0");
+        this.radius = 0;
+      } else
         this.radius = radius;
+
+    if (color) {
+      this.color = color;
+    } else {
+      console.warn("CircleRender: color not passed, defaulting to white");
+      this.color = p5Instance.color(255);
     }
+  }
 
     update(user: GameObject) {
+      p5Instance.fill(this.color);
       p5Instance.circle(user.pos.x, user.pos.y, this.radius);
     }
   }
   export class EllipseRender extends ShapeRender {
-    width?: number = undefined;
-    height?: number = undefined;
+    width: number;
+    height: number;
+    color: p5.Color;
 
-    constructor(width?: number, height?: number) {
+    constructor(width?: number, height?: number, color?: p5.Color) {
       super();
-      this.width = width;
-      this.height = height;
+      if (width && height) {
+        this.width = width;
+        this.height = height;
+      } else {
+        console.warn("EllipseRender: width or height not passed, defaulting to 0");
+        this.width = 0;
+        this.height = 0;
+      }
+
+      if (color) {
+        this.color = color;
+      } else {
+        console.warn("RectRender: color not passed, defaulting to white");
+        this.color = p5Instance.color(255);
+      }
     }
 
     update(user: GameObject) {
-      // TODO: implement
+      p5Instance.fill(this.color);
+      p5Instance.ellipse(user.pos.x, user.pos.y, this.width, this.height);
     }
   }
+
+  // TODO: implement Polygons
   export class PolygonRender extends ShapeRender {
     vertices?: Vec[] = [];
+    color: p5.Color;
 
-    constructor(vertices?: Vec[]) {
+    constructor(vertices?: Vec[], color?: p5.Color) {
       super();
       this.vertices = vertices;
+
+      if (color) {
+        this.color = color;
+      } else {
+        console.warn("RectRender: color not passed, defaulting to white");
+        this.color = p5Instance.color(255);
+      }
     }
 
     update(user: GameObject) {
+      p5Instance.fill(this.color);
       // TODO: implement
     }
   }
