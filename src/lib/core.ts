@@ -74,6 +74,27 @@ export class Vec extends Base {
     let target = this;
     return new Vec(target.x - origin.x, target.y - origin.y);
   }
+  
+  scale(scalar: number) {
+    this.x *= scalar;
+    this.y *= scalar;
+  }
+
+  divide(scalar: number) {
+    this.x /= scalar;
+    this.y /= scalar;
+  }
+  
+  magnitude(): number {
+    return Math.sqrt(this.x**2 + this.y**2);
+  }
+
+  // TODO: untested
+  normalize() {
+    let magnitude = this.magnitude();
+    this.x /= magnitude;
+    this.y /= magnitude;
+  }
 }
 
 // TODO: abstract getting a component from a ComponentList to its own function
