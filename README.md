@@ -11,4 +11,4 @@ To fix this I started watching some tutorial videos about the maths involved:
   * [Math for Game Developers](https://www.youtube.com/watch?v=Wp_eMiFzP5M&list=PLW3Zl3wyJwWOpdhYedlD-yCB7WQoHf-My) by John Rodriguez
   * [Coding Math](https://www.youtube.com/watch?v=IpN4NLDpWDY&list=PL7wAPgl1JVvUEb0dIygHzO4698tmcwLk9)
 
-I'm gonna follow it up with a remake at some point in the future. Might also finish it up, as soon as I have an idea about collision and the needed motivation of course.
+I'm gonna follow it up with a remake at some point in the future. Might also finish up this version with all basic functionalities, as soon as I have an idea about collision and the needed motivation of course.
