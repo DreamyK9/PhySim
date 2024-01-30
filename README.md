@@ -12,3 +12,5 @@ To fix this I started watching some tutorial videos about the maths involved:
   * [Coding Math](https://www.youtube.com/watch?v=IpN4NLDpWDY&list=PL7wAPgl1JVvUEb0dIygHzO4698tmcwLk9)
 
 I'm gonna follow it up with a remake at some point in the future. Might also finish up this version with all basic functionalities, as soon as I have an idea about collision and the needed motivation of course.
+
+Update 2024: It's unlikely going to happen anytime soon.
